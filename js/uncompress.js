@@ -66,17 +66,9 @@ if (! Uint8Array.prototype.slice) {
 }
 }
 
-// FIXME: This function is super inefficient
+//FIXED: Used the built-in .join()
 function saneJoin(array, separator) {
-	let retval = '';
-	for (let i=0; i<array.length; ++i) {
-		if (i === 0) {
-			retval += array[i];
-		} else {
-			retval += separator + array[i];
-		}
-	}
-	return retval;
+	return array.join(separator);
 }
 
 function saneMap(array, cb) {

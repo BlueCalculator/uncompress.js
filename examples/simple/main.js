@@ -5,35 +5,17 @@
 
 let entryList = null;
 
-// FIXME: This function is super inefficient
-function isValidImageType(file_name) {
-	file_name = file_name.toLowerCase();
-	return file_name.endsWith('.jpeg') ||
-			file_name.endsWith('.jpg') ||
-			file_name.endsWith('.png') ||
-			file_name.endsWith('.bmp') ||
-			file_name.endsWith('.webp') ||
-			file_name.endsWith('.gif');
-}
 
-// FIXME: This function is super inefficient
-function getFileMimeType(file_name) {
-	file_name = file_name.toLowerCase();
-	if (file_name.endsWith('.jpeg') || file_name.endsWith('.jpg')) {
-		return 'image/jpeg';
-	} else if (file_name.endsWith('.png')) {
-		return 'image/png';
-	} else if (file_name.endsWith('.bmp')) {
-		return 'image/bmp';
-	} else if (file_name.endsWith('.webp')) {
-		return 'image/webp';
-	} else if (file_name.endsWith('.gif')) {
-		return 'image/gif';
-	} else {
-		// Uses jpeg as default mime type
-		return 'image/jpeg';
-	}
-}
+const end = file_name.toLowerCase().slice(file_name.lastIndexOf('.'));
+const validImageFormats = ['.jpeg', '.jpg', '.png', '.bmp', '.webp', '.gif'];
+const mimeTypes = {
+    '.jpeg': 'image/jpeg',
+    '.jpg': 'image/jpeg',
+    '.png': 'image/png',
+    '.bmp': 'image/bmp',
+    '.webp': 'image/webp',
+    '.gif': 'image/gif'
+};
 
 function toFriendlySize(size) {
 	if (size >= 1024000000) {
@@ -63,7 +45,7 @@ function onClick(entry) {
 		}
 
 		// Convert the data into an Object URL
-		let blob = new Blob([data], {type: getFileMimeType(entry.name)});
+		let blob = new Blob([data], {type: mimeTypes[end] || 'image/jpeg'});
 		let url = URL.createObjectURL(blob);
 
 		img.src = url;
@@ -77,7 +59,7 @@ function createLinkForEachEntry(archive) {
 	// Get only the entries that are images
 	let entries = [];
 	archive.entries.forEach(function(entry) {
-		if (isValidImageType(entry.name)) {
+		if (validImageFormats.includes(end)) {
 			entries.push(entry);
 		}
 	});
